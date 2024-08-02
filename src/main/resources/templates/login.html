@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>PostBoard</title>
+</head>
+<body>
+    <form th:action="@{/loginProc}" th:object="${requestDto}" method="post" >
+        아이디 : <input type="text" name="id"><br>
+        비밀번호 : <input type="password" name="password"><br>
+        <input type="submit" value="로그인">
+        <a href="/join">가입하기</a>
+    </form>
+</body>
+</html>

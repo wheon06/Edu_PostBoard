@@ -1,0 +1,12 @@
+package com.wheon.edu_postboard.dto;
+
+import lombok.Getter;
+
+@Getter
+public class LoginRequestDto {
+
+    private String username;
+
+    private String password;
+
+}
