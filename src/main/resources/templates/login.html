@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>PostBoard</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 <body>
-    <form th:action="@{/loginProc}" th:object="${requestDto}" method="post" >
-        아이디 : <input type="text" th:field="*{username}"><br>
-        비밀번호 : <input type="password" th:field="*{password}"><br>
+<div class="login-wrapper">
+    <h2>Login</h2>
+    <form th:action="@{/loginProc}" th:object="${requestDto}" method="post" id="login-form">
+        <input placeholder="아이디" type="text" th:field="*{username}" required>
+        <input placeholder="비밀번호" type="password" th:field="*{password}" required>
         <input type="submit" value="로그인">
         <a href="/join">가입하기</a>
     </form>
+</div>
 </body>
 </html>

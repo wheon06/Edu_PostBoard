@@ -3,16 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>PostBoard</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
-<h2 th:text="${session.userInfo.getUsername()}"></h2>
-<br>
-<form th:action="@{search}" th:method="post">
-    <input type="text" name="keyword">
-    <input type="submit" value="검색하기">
-</form>
-<br>
-<button type="button" onclick="location.href='/main/write'">글 쓰기</button>
+<div id="header">
+    <h2 th:text="${session.userInfo.getUsername()}"></h2>
+</div>
+<div id="serch-wrapper">
+    <button type="button" onclick="location.href='/main/write'">글 쓰기</button>
+    <div id="search-form">
+        <form th:action="@{search}" th:method="post">
+            <input type="text" name="keyword">
+            <input type="submit" value="검색하기">
+        </form>
+    </div>
+</div>
 <table style="width: 100%" border="1">
     <tr>
         <th scope="col" style="width: 60%">제목</th>
