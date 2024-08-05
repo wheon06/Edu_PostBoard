@@ -7,6 +7,7 @@ import java.util.Date;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @Table(name = "Post")
 @AllArgsConstructor
