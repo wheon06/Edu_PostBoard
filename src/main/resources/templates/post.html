@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>PostBoard</title>
+</head>
+<body>
+<h4 th:text="@{|작성자 : ${postRequestDto.memberEntity.getUsername()}|}">작성자</h4>
+<div style="border: 1px solid black">
+    <h2 th:text="${postRequestDto.title}">Title</h2>
+    <div style="height: 100px">
+        <h3 th:text="${postRequestDto.content}">Content</h3>
+    </div>
+    <div th:with="username=${loginResponseDto.getUsername()}">
+        <a type="button" th:href="@{/main}">돌아가기</a>
+        <a th:if="${postRequestDto.getMemberEntity().getUsername() == username}"
+           th:href="@{|post/edit?postId=${postRequestDto.getId()}|}">수정하기</a>
+        <a th:if="${postRequestDto.getMemberEntity().getUsername() == username}"
+           th:href="@{|post/delete?postId=${postRequestDto.getId()}|}">삭제하기</a>
+    </div>
+</div>
+<form th:action="@{|saveCommentProc?postId=${postRequestDto.getId()}|}" th:object="${saveCommentDto}" method="post">
+    <input type="text" th:field="*{content}">
+    <input type="submit" value="댓글 달기">
+</form>
+<table style="width: 80%">
+    <div th:with="username=${loginResponseDto.getUsername()}">
+        <tr th:each="comment : ${commentEntityList}" th:if="${postRequestDto.id == comment.getPostEntity().getId()}">
+            <td style="width: 60%" th:text="${comment.content}">댓글</td>
+            <td th:text="${comment.memberEntity.getUsername()}">작성자</td>
+            <td th:text="${comment.date}">작성일</td>
+            <td><a th:if="${comment.memberEntity.getUsername() == username}"
+                   th:href="@{|comment/edit?commentId=${comment.getId()}|}">수정하기</a></td>
+            <td><a th:if="${comment.memberEntity.getUsername() == username}"
+                   th:href="@{|comment/delete?commentId=${comment.getId()}|}">삭제하기</a></td>
+        </tr>
+    </div>
+</table>
+</body>
+</html>

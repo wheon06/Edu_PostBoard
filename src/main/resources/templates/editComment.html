@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>PostBoard</title>
+</head>
+<body>
+<form th:action="@{|/main/comment/editProc?commentId=${commentRequestDto.getId()}|}" th:object="${commentRequestDto}" method="post">
+    <input type="text" th:value="${commentRequestDto.getContent()}" th:field="*{content}"><br>
+    <input type="submit" value="수정하기">
+</form>
+</body>
+</html>

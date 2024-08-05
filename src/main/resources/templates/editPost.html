@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>PostBoard</title>
+</head>
+<body>
+<form th:action="@{|/main/post/editProc?postId=${postRequestDto.getId()}|}" th:object="${postRequestDto}" method="post">
+    <input type="text" placeholder="제목을 입력하세요" th:value="${postRequestDto.getTitle()}" th:field="*{title}"><br>
+    <textarea placeholder="내용을 입력하세요" th:text="${postRequestDto.getContent()}" th:field="*{content}"></textarea><br>
+    <input type="submit" value="수정하기">
+</form>
+</body>
+</html>

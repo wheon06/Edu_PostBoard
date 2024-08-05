@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>PostBoard</title>
+</head>
+<body>
+<h2 th:text="${session.userInfo.getUsername()}"></h2>
+<br>
+<form th:action="@{search}" th:method="post">
+    <input type="text" name="keyword">
+    <input type="submit" value="검색하기">
+</form>
+<br>
+<button type="button" onclick="location.href='/main/write'">글 쓰기</button>
+<table style="width: 100%" border="1">
+    <tr>
+        <th scope="col" style="width: 60%">제목</th>
+        <th scope="col">작성자</th>
+    </tr>
+    <tr th:each="post : ${postEntityList}">
+        <td><a th:href="@{|main/detail?postId=${post.getId()}|}" th:text="${post.getTitle()}">제목</a></td>
+        <td th:text="${post.getMemberEntity().getUsername()}">작성자</td>
+    </tr>
+</table>
+</body>
+</html>
