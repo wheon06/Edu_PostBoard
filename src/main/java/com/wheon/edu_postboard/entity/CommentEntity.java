@@ -1,11 +1,18 @@
 package com.wheon.edu_postboard.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
+import java.lang.reflect.Member;
 import java.util.Date;
 
 @Entity
+@Getter
+@Setter
+@Builder
 @Table(name = "Comment")
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentEntity {
 
     @Id
@@ -14,7 +21,11 @@ public class CommentEntity {
 
     private String content;
 
-    private Date date;
+    private String date;
+
+    @ManyToOne
+    @JoinColumn(name = "Member_Id")
+    private MemberEntity memberEntity;
 
     @ManyToOne
     @JoinColumn(name = "Post_Id")
