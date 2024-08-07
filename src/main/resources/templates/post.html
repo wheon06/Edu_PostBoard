@@ -3,38 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <title>PostBoard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h4 th:text="@{|작성자 : ${postRequestDto.memberEntity.getUsername()}|}">작성자</h4>
-<div style="border: 1px solid black">
-    <h2 th:text="${postRequestDto.title}">Title</h2>
-    <div style="height: 100px">
-        <h3 th:text="${postRequestDto.content}">Content</h3>
+<body class="bg-gray-100">
+<div class="bg-gray-200 max-w-5xl mx-auto mt-10 p-5 rounded-lg">
+    <h4 class="mb-1" th:text="@{|작성자 : ${postRequestDto.memberEntity.getUsername()}|}">작성자</h4>
+    <div>
+        <h2 class="bg-gray-100 font-bold p-1" th:text="${postRequestDto.title}">Title</h2>
+        <h3 class="bg-gray-100 p-1 mt-1 min-h-96" th:text="${postRequestDto.content}">Content</h3>
+        <div class="my-1" th:with="username=${loginResponseDto.getUsername()}">
+            <a class="hover:underline hover:text-blue-500" type="button" th:href="@{/main}">돌아가기</a>
+            <a class="hover:underline hover:text-blue-500"
+               th:if="${postRequestDto.getMemberEntity().getUsername() == username}" id="openEditPostPopup">수정하기</a>
+            <script th:inline="javascript">
+                document.getElementById("openEditPostPopup").onclick = function () {
+                    document.getElementById("editPostPopup").style.display = "block";
+                    document.getElementById("editPostTitle").value = [[${postRequestDto.title}]];
+                    document.getElementById("editPostContent").value = [[${postRequestDto.content}]];
+                }
+            </script>
+            <a class="hover:underline hover:text-blue-500"
+               th:if="${postRequestDto.getMemberEntity().getUsername() == username}"
+               th:href="@{|post/delete?postId=${postRequestDto.getId()}|}">삭제하기</a>
+            <div id="editPostPopup" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50">
+                <div class="relative mx-auto my-20 p-5 w-4/5 max-h-full bg-white rounded-lg">
+                    <div class="flex justify-between"><h2 class="text-xl font-semibold">글 수정하기</h2>
+                        <div>
+                            <a class="bg-red-500 text-white p-1 rounded-md" id="closeEditPostPopup">닫기</a>
+                            <script>
+                                document.getElementById("closeEditPostPopup").onclick = function () {
+                                    document.getElementById("editPostPopup").style.display = "none";
+                                }
+                            </script>
+                        </div>
+                    </div>
+                    <hr class="h-[3px] my-5 bg-gray-400">
+                    <form th:action="@{|/main/post/editProc?postId=${postRequestDto.getId()}|}"
+                          th:object="${postRequestDto}" th:method="post">
+                        <input class="w-full border-2 rounded-md" id="editPostTitle" type="text" th:field="*{title}">
+                        <textarea class="w-full min-h-96 border-2 rounded-md mt-1" id="editPostContent"
+                                  th:field="*{content}"></textarea>
+                        <input type="submit" class="bg-blue-500 text-white p-1 rounded-md" id="doneEditPostPopup"
+                               value="수정완료">
+                    </form>
+                    <script>
+                        document.getElementById("doneEditPostPopup").onclick = function () {
+                            document.getElementById("editPostPopup").style.display = "none";
+
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
     </div>
-    <div th:with="username=${loginResponseDto.getUsername()}">
-        <a type="button" th:href="@{/main}">돌아가기</a>
-        <a th:if="${postRequestDto.getMemberEntity().getUsername() == username}"
-           th:href="@{|post/edit?postId=${postRequestDto.getId()}|}">수정하기</a>
-        <a th:if="${postRequestDto.getMemberEntity().getUsername() == username}"
-           th:href="@{|post/delete?postId=${postRequestDto.getId()}|}">삭제하기</a>
+    <hr class="h-[3px] my-5 bg-gray-400">
+    <form class="flex justify-between gap-1" th:action="@{|saveCommentProc?postId=${postRequestDto.getId()}|}"
+          th:object="${saveCommentDto}" method="post">
+        <input class="w-full" type="text" th:field="*{content}">
+        <input class="bg-blue-500 hover:bg-blue-700 text-white rounded-md p-1" type="submit" value="댓글 달기">
+    </form>
+    <div class="mt-1">
+        <table class="w-full">
+            <div th:with="username=${loginResponseDto.getUsername()}">
+                <tr th:each="comment : ${commentEntityList}"
+                    th:if="${postRequestDto.id == comment.getPostEntity().getId()}" class="w-full">
+
+                    <td class="text-left " th:text="${comment.content}">댓글</td>
+                    <td class="w-[100px] text-center" th:text="${comment.memberEntity.getUsername()}">작성자</td>
+                    <td class="w-[250px] text-center" th:text="${comment.date}">작성일</td>
+                    <td class="w-[100px] text-center"><a class="hover:underline hover:text-blue-500"
+                                                         th:if="${comment.memberEntity.getUsername() == username}"
+                                                         th:id="'openEditCommentPopup-'+${comment.id}">수정하기</a>
+                    </td>
+                    <script th:inline="javascript">
+                        document.getElementById("openEditCommentPopup-" + [[${comment.id}]]).onclick = function () {
+                            document.getElementById("editCommentPopup-" + [[${comment.id}]]).style.display = "block";
+                            document.getElementById("editCommentContent-" + [[${comment.id}]]).value = [[${comment.content}]];
+                        }
+                    </script>
+                    <div th:id="'editCommentPopup-'+${comment.id}"
+                         class="hidden fixed inset-0 z-50 bg-black bg-opacity-50">
+                        <div class="relative mx-auto my-20 p-5 w-4/5 max-h-full bg-white rounded-lg">
+                            <div class="flex justify-between"><h2 class="text-xl font-semibold">댓글 수정하기</h2>
+                                <div>
+                                    <a class="bg-red-500 text-white p-1 rounded-md"
+                                       th:id="'closeEditCommentPopup-'+${comment.id}">닫기</a>
+                                    <script th:inline="javascript">
+                                        document.getElementById("closeEditCommentPopup-" + [[${comment.id}]]).onclick = function () {
+                                            document.getElementById("editCommentPopup-" + [[${comment.id}]]).style.display = "none";
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                            <hr class="h-[3px] my-5 bg-gray-400">
+                            <!--comment 다른거 해결해야함-->
+                            <form th:action="@{|/main/comment/editProc?commentId=${comment.id}|}"
+                                  th:object="${commentRequestDto}" th:method="post">
+                                <textarea class="w-full min-h-96 border-2 rounded-md mt-1" th:id="'editCommentContent-'+${comment.id}"
+                                          th:field="*{content}"></textarea>
+                                <input type="submit" class="bg-blue-500 text-white p-1 rounded-md"
+                                       th:id="'doneEditCommentPopup-'+${comment.id}"
+                                       value="수정완료">
+                            </form>
+                            <script>
+                                document.getElementById("doneEditCommentPopup-" + [[${comment.id}]]).onclick = function () {
+                                    document.getElementById("editCommentPopup-" + [[${comment.id}]]).style.display = "none";
+                                }
+                            </script>
+                        </div>
+                    </div>
+                    <td class="w-[100px] text-center"><a class="hover:underline hover:text-blue-500"
+                                                         th:if="${comment.memberEntity.getUsername() == username}"
+                                                         th:href="@{|comment/delete?commentId=${comment.getId()}|}">삭제하기</a>
+                    </td>
+                </tr>
+            </div>
+        </table>
     </div>
 </div>
-<form th:action="@{|saveCommentProc?postId=${postRequestDto.getId()}|}" th:object="${saveCommentDto}" method="post">
-    <input type="text" th:field="*{content}">
-    <input type="submit" value="댓글 달기">
-</form>
-<table style="width: 80%">
-    <div th:with="username=${loginResponseDto.getUsername()}">
-        <tr th:each="comment : ${commentEntityList}" th:if="${postRequestDto.id == comment.getPostEntity().getId()}">
-            <td style="width: 60%" th:text="${comment.content}">댓글</td>
-            <td th:text="${comment.memberEntity.getUsername()}">작성자</td>
-            <td th:text="${comment.date}">작성일</td>
-            <td><a th:if="${comment.memberEntity.getUsername() == username}"
-                   th:href="@{|comment/edit?commentId=${comment.getId()}|}">수정하기</a></td>
-            <td><a th:if="${comment.memberEntity.getUsername() == username}"
-                   th:href="@{|comment/delete?commentId=${comment.getId()}|}">삭제하기</a></td>
-        </tr>
-    </div>
-</table>
 </body>
 </html>

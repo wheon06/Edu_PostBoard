@@ -63,10 +63,12 @@ public class MainController {
         LoginResponseDto userInfo = (LoginResponseDto) session.getAttribute("userInfo");
         PostRequestDto requestDto = postService.getPost(postId);
         List<CommentEntity> commentEntities = commentService.loadComments();
+        CommentRequestDto commentRequestDto = new CommentRequestDto();
         model.addAttribute(requestDto);
         model.addAttribute(userInfo);
         model.addAttribute(saveCommentDto);
         model.addAttribute(commentEntities);
+        model.addAttribute(commentRequestDto);
         return "post";
     }
 
@@ -76,14 +78,6 @@ public class MainController {
         LoginResponseDto userInfo = (LoginResponseDto) session.getAttribute("userInfo");
         commentService.saveComment(saveCommentDto, userInfo, postId);
         return "redirect:/main/detail?postId=" + postId;
-    }
-
-    @RequestMapping("/main/post/edit")
-    public String postEditP(@RequestParam Long postId, Model model) {
-        PostRequestDto requestDto = postService.getPost(postId);
-        requestDto.setId(postId);
-        model.addAttribute(requestDto);
-        return "editPost";
     }
 
     @RequestMapping("/main/post/delete")
@@ -97,13 +91,6 @@ public class MainController {
         editPostDto.setId(postId);
         postService.editPost(editPostDto);
         return "redirect:/main/detail?postId=" + postId;
-    }
-
-    @RequestMapping("/main/comment/edit")
-    public String commentEditP(@RequestParam Long commentId, Model model) {
-        CommentRequestDto requestDto = commentService.getComment(commentId);
-        model.addAttribute(requestDto);
-        return "editComment";
     }
 
     @PostMapping("/main/comment/editProc")
@@ -120,8 +107,5 @@ public class MainController {
         commentService.deleteComment(commentId);
         return "redirect:/main/detail?postId=" + postId;
     }
-
-
-    //todo 검색
 
 }

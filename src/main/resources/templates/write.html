@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>PostBoard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<form th:action="@{/main/writeProc}" th:object="${writePostDto}" method="post">
-    <input type="text" placeholder="제목을 입력하세요" th:field="*{title}"><br>
-    <textarea placeholder="내용을 입력하세요" th:field="*{content}"></textarea><br>
-    <input type="submit" value="글 쓰기">
-</form>
+<body class="bg-gray-200">
+<div class="max-w-5xl bg-gray-100 mx-auto mt-10 rounded-lg p-5 min-h-96">
+    <form th:action="@{/main/writeProc}" th:object="${writePostDto}" method="post">
+        <div class="flex flex-col gap-1">
+            <input type="text" placeholder="제목을 입력하세요" th:field="*{title}">
+            <textarea class="min-h-96" placeholder="내용을 입력하세요" th:field="*{content}"></textarea>
+        </div>
+        <input class="text-left bg-blue-500 text-white p-2 rounded-lg mt-2" type="submit" value="글 쓰기">
+    </form>
+</div>
 </body>
 </html>

@@ -3,30 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>PostBoard</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<div id="header">
-    <h2 th:text="${session.userInfo.getUsername()}"></h2>
-</div>
-<div id="serch-wrapper">
-    <button type="button" onclick="location.href='/main/write'">글 쓰기</button>
-    <div id="search-form">
-        <form th:action="@{search}" th:method="post">
-            <input type="text" name="keyword">
-            <input type="submit" value="검색하기">
-        </form>
+<body class="bg-gray-100">
+<div class="max-w-5xl mx-auto mt-10">
+    <div class="flex items-center justify-between bg-gray-200 px-5 py-3 mb-2 rounded-lg">
+        <h2 class="font-bold text-" th:text="${session.userInfo.getUsername()}">admin</h2>
+        <button class="bg-red-500 hover:bg-red-700 p-2 text-white rounded-lg" type="button"
+                onclick="location.href='/logout'">
+            로그아웃
+        </button>
+    </div>
+    <div class="bg-gray-200 p-5 rounded-lg">
+        <div class="flex justify-between items-center">
+            <button class="bg-blue-500 hover:bg-blue-700 p-2 text-white rounded-lg" type="button"
+                    onclick="location.href='/main/write'">글
+                쓰기
+            </button>
+            <div class="flex">
+                <form th:action="@{search}" th:method="post">
+                    <input class="border h-full rounded-lg p-2" type="text" name="keyword">
+                    <input class="bg-blue-500 hover:bg-blue-700 p-2 text-white rounded-lg" type="submit" value="검색하기">
+                </form>
+            </div>
+        </div>
+        <hr class="h-[3px] my-5 bg-gray-400">
+        <div>
+            <table style="width: 100%" border="1">
+                <tr>
+                    <th scope="col" style="width: 60%">제목</th>
+                    <th scope="col">작성자</th>
+                </tr>
+                <tr class="bg-gray-100" th:each="post : ${postEntityList}">
+                    <td class="p-1 hover:underline hover:text-blue-500"><a th:href="@{|main/detail?postId=${post.getId()}|}" th:text="${post.getTitle()}">제목</a></td>
+                    <td class="p-1 flex justify-center" th:text="${post.getMemberEntity().getUsername()}">작성자</td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
-<table style="width: 100%" border="1">
-    <tr>
-        <th scope="col" style="width: 60%">제목</th>
-        <th scope="col">작성자</th>
-    </tr>
-    <tr th:each="post : ${postEntityList}">
-        <td><a th:href="@{|main/detail?postId=${post.getId()}|}" th:text="${post.getTitle()}">제목</a></td>
-        <td th:text="${post.getMemberEntity().getUsername()}">작성자</td>
-    </tr>
-</table>
 </body>
 </html>

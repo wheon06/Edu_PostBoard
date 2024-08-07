@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>PostBoard</title>
-    <link rel="stylesheet" th:href="@{/css/join.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<div class="signup-wrapper">
-    <h2>Signup</h2>
-    <form th:action="@{/joinProc}" th:object="${requestDto}" method="post" id="signup-form">
-        <input placeholder="아이디" type="text" th:field="*{username}" required>
-        <input placeholder="비밀번호" type="password" th:field="*{password}" required>
-        <input type="submit" value="회원가입">
-        <a href="/">로그인하기</a>
-    </form>
+<body class="bg-gray-100">
+<div class="bg-gray-200 max-w-md p-5 mx-auto mt-40 rounded-3xl">
+    <div class="flex justify-center mb-2">
+        <h2 class="text-2xl font-bold">회원가입</h2>
+    </div>
+    <div>
+        <form class="flex flex-col gap-2" th:action="@{/joinProc}" th:object="${requestDto}" method="post">
+            <input class="border-2 rounded-md p-2" placeholder="아이디" type="text" th:field="*{username}" required>
+            <input class="border-2 rounded-md p-2" placeholder="비밀번호" type="password" th:field="*{password}" required>
+            <input class="bg-blue-500 hover:bg-blue-700 h-10 font-bold rounded-md text-white" type="submit" value="가입하기">
+            <a href="/">로그인하기</a>
+        </form>
+    </div>
 </div>
 </body>
 </html>
